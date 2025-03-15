@@ -85,7 +85,7 @@ pub fn claim_tokens(ctx: Context<ClaimTokens>) -> Result<()> {
     // Transfer tokens from presale token account to user
     let seeds = &[
         SEED_PREFIX_PRESALE,
-        presale.token_mint.as_ref(),
+        presale.mint_of_token_being_sold.as_ref(),
         presale.creator.as_ref(),
         &[presale.bump],
     ];
@@ -145,7 +145,7 @@ pub struct ClaimTokens<'info> {
     #[account(
         seeds = [
             SEED_PREFIX_PRESALE,
-            presale.token_mint.as_ref(),
+            presale.mint_of_token_being_sold.as_ref(),
             presale.creator.as_ref(),
         ],
         bump = presale.bump,
@@ -155,7 +155,7 @@ pub struct ClaimTokens<'info> {
     
     #[account(
         mut,
-        constraint = presale_token_account.mint == presale.token_mint,
+        constraint = presale_token_account.mint == presale.mint_of_token_being_sold,
         constraint = presale_token_account.owner == presale.key()
     )]
     pub presale_token_account: Account<'info, TokenAccount>,
@@ -163,7 +163,7 @@ pub struct ClaimTokens<'info> {
     #[account(
         mut,
         constraint = user_token_account.owner == user.key(),
-        constraint = user_token_account.mint == presale.token_mint
+        constraint = user_token_account.mint == presale.mint_of_token_being_sold
     )]
     pub user_token_account: Account<'info, TokenAccount>,
     

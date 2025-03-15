@@ -1,12 +1,10 @@
 use anchor_lang::prelude::*;
-// use anchor_spl::token::{TokenAccount, Mint};
-// use std::collections::HashMap;
 
 #[account]
 pub struct Presale {
     pub admin: Pubkey,                      // Admin who can approve and manage presales
     pub creator: Pubkey,                    // Creator of the presale
-    pub token_mint: Pubkey,                 // Token being sold
+    pub mint_of_token_being_sold: Pubkey,                 // Token being sold
     pub status: u8,                         // 0: Pending, 1: Approved, 2: Live, 3: Completed, 4: Cancelled
     pub token_price: u64,                   // Price in lamports per token
     pub tokens_for_sale: u64,               // Total number of tokens for sale
@@ -32,6 +30,7 @@ pub struct Presale {
     pub third_release_time: i64,            // Time of third release
     pub bump: u8,                           // PDA bump
 }
+
 
 #[account]
 pub struct UserStake {

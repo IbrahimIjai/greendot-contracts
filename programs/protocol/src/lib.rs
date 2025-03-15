@@ -1,30 +1,27 @@
 use anchor_lang::prelude::*;
 
-declare_id!("DfFSFuoKbV9PKmqd1PDh6cLQuciqrVcChWjeZvrZMZ1y");
+// This is your program's public key and it will update
+// automatically when you build the project.
+declare_id!("4SF1zHVgcXfhbp1KCxuRPNQzurfML6XvQuVERnEnAWU8");
 
-pub mod state;
-pub mod utils;
+pub mod constants;
 pub mod errors;
 pub mod presale;
-pub mod tier;
-pub mod constants;
 pub mod staking;
+pub mod state;
+pub mod tier;
+pub mod utils;
 pub mod vesting;
 
-// use state::*;
-use utils::*;
-// use errors::*;
 use presale::*;
-// use tier::*;
-// use constants::*;
 use staking::*;
+use utils::*;
 use vesting::*;
-#[program]
 
-pub mod protocol {
+#[program]
+mod sfund_sonic {
     use super::*;
 
-  // Global state management
     pub fn initialize(
         ctx: Context<InitializeGlobalState>,
         staking_token_mint: Pubkey,
@@ -33,15 +30,11 @@ pub mod protocol {
         initialize_global_state(ctx, staking_token_mint, treasury_wallet)
     }
 
-    pub fn update_admin(
-        ctx: Context<UpdateAdmin>,
-        new_admin: Pubkey,
-    ) -> Result<()> {
+    pub fn update_admin(ctx: Context<UpdateAdmin>, new_admin: Pubkey) -> Result<()> {
         utils::update_admin(ctx, new_admin)
     }
-    
 
-     // Presale functions
+    // Presale functions
     pub fn create_presale(
         ctx: Context<CreatePresale>,
         tokens_for_sale: u64,
@@ -65,65 +58,37 @@ pub mod protocol {
             vesting_enabled,
         )
     }
-    
+
     pub fn approve_presale(ctx: Context<ApprovePresale>) -> Result<()> {
         presale::approve_presale(ctx)
     }
-    
-    pub fn start_presale(ctx: Context<ManagePresale>) -> Result<()> {
-        presale::start_presale(ctx)
-    }
-    
-    pub fn end_presale(ctx: Context<ManagePresale>) -> Result<()> {
-        presale::end_presale(ctx)
-    }
-    
+
     pub fn register_for_presale(ctx: Context<RegisterForPresale>) -> Result<()> {
         presale::register_for_presale(ctx)
     }
-    
-    pub fn buy_tokens(
-        ctx: Context<BuyTokens>,
-        amount: u64,
-    ) -> Result<()> {
+
+    pub fn buy_tokens(ctx: Context<BuyTokens>, amount: u64) -> Result<()> {
         presale::buy_tokens(ctx, amount)
     }
-    
-    pub fn withdraw_funds(ctx: Context<WithdrawFunds>) -> Result<()> {
-        presale::withdraw_funds(ctx)
-    }
-    
-    pub fn list_token(
-        ctx: Context<ListToken>,
-        // pool_seed: u64,
-    ) -> Result<()> {
-        presale::list_token(ctx, )
-    }
 
+    pub fn list_token(ctx: Context<ListToken>) -> Result<()> {
+        presale::list_token(ctx)
+    }
 
     // Staking functions
 
-    pub fn stake(
-        ctx: Context<StakeTokens>,
-        amount: u64,
-    ) -> Result<()> {
+    pub fn stake(ctx: Context<StakeTokens>, amount: u64) -> Result<()> {
         staking::stake_tokens(ctx, amount)
     }
-    
-    pub fn unstake(
-        ctx: Context<UnstakeTokens>,
-        amount: u64,
-    ) -> Result<()> {
+
+    pub fn unstake(ctx: Context<UnstakeTokens>, amount: u64) -> Result<()> {
         staking::unstake_tokens(ctx, amount)
     }
-    
 
-     // Vesting/claiming functions
+    // Vesting/claiming functions
+
     pub fn claim_tokens(ctx: Context<ClaimTokens>) -> Result<()> {
         vesting::claim_tokens(ctx)
     }
 
 }
-
-#[derive(Accounts)]
-pub struct Initialize {}
